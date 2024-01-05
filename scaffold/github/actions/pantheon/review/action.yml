@@ -22,6 +22,10 @@ inputs:
   lock-password:
     description: "The password if locking this environment with Basic Auth"
     required: false
+  wipe-multidev:
+    description: "Whether or not to wipe the multidev on each push. Defaults to true."
+    required: false
+    default: "true"
 runs:
   using: "composite"
   steps:
@@ -87,11 +91,17 @@ runs:
         JQ_COMMAND="'.[] | select(.id == \"pr-$DRAINPIPE_PR_NUMBER\") | .id'"
         ENVIRONMENT_EXISTS=$(drainpipe_exec "terminus multidev:list --format json ${{ inputs.site-name }} | jq --raw-output $JQ_COMMAND")
         if [ "$ENVIRONMENT_EXISTS" == "pr-$DRAINPIPE_PR_NUMBER" ]; then
-          drainpipe_exec "terminus env:wipe ${{ inputs.site-name }}.pr-$DRAINPIPE_PR_NUMBER --yes"
+          if [ "${{ inputs.wipe-multidev }}" == "true" ]; then
+            drainpipe_exec "terminus env:wipe ${{ inputs.site-name }}.pr-$DRAINPIPE_PR_NUMBER --yes"
+          fi
         else
-          drainpipe_exec "terminus multidev:create ${{ inputs.site-name }}.live pr-$DRAINPIPE_PR_NUMBER --no-db --no-files --yes"
+          if [ "${{ inputs.wipe-multidev }}" == "true" ]; then
+            drainpipe_exec "terminus multidev:create ${{ inputs.site-name }}.live pr-$DRAINPIPE_PR_NUMBER --no-db --no-files --yes"
+          else
+            drainpipe_exec "terminus multidev:create ${{ inputs.site-name }}.live pr-$DRAINPIPE_PR_NUMBER --yes"
+          fi
         fi
-        if [ "${{ inputs.run-installer }}" != "true" ]; then
+        if [ "${{ inputs.run-installer }}" != "true" ] && [ "${{ inputs.wipe-multidev }}" == "true" ]; then
             drainpipe_exec "terminus env:clone-content ${{ inputs.site-name }}.live pr-$DRAINPIPE_PR_NUMBER --yes"
         fi
       shell: bash

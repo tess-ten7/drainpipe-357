@@ -69,3 +69,5 @@ jobs:
           site-name: ${{ secrets.PANTHEON_SITE_NAME }}
           lock-username: ${{ secrets.PANTHEON_REVIEW_USERNAME }}
           lock-password: ${{ secrets.PANTHEON_REVIEW_PASSWORD }}
+          # set to "false" if you want to skip wiping the multidev on each push
+          wipe-multidev: ${{ secrets.PANTHEON_WIPE_MULTIDEV }}

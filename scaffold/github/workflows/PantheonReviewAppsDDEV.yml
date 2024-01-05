@@ -49,3 +49,5 @@ jobs:
           lock-password: ${{ secrets.PANTHEON_REVIEW_PASSWORD }}
           # set to "true" if you want to run the installer
           run-installer: ${{ secrets.PANTHEON_REVIEW_RUN_INSTALLER }}
+          # set to "false" if you want to skip wiping the multidev on each push
+          wipe-multidev: ${{ secrets.PANTHEON_WIPE_MULTIDEV }}

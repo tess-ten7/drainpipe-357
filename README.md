@@ -427,6 +427,7 @@ To enable deployment of Pantheon Review Apps:
     - `TERMINUS_PLUGINS` (optional) Comma-separated list of Terminus plugins to be available
     - `PANTHEON_REVIEW_USERNAME` (optional) A username for HTTP basic auth local
     - `PANTHEON_REVIEW_PASSWORD` (optional) The password to lock the site with
+    - `PANTHEON_WIPE_MULTIDEV` (optional) set to false to skip wiping the multidev on each push
 
 ## GitLab CI Integration
 
